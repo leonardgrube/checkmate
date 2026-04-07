@@ -4,12 +4,29 @@ use std::path::Path;
 use std::process::Command;
 use tauri::AppHandle;
 
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+fn git_command() -> Command {
+    #[cfg(target_os = "windows")]
+    {
+        let mut cmd = Command::new("git");
+        cmd.creation_flags(CREATE_NO_WINDOW);
+        cmd
+    }
+    #[cfg(not(target_os = "windows"))]
+    Command::new("git")
+}
+
 fn run_git<I, S>(repo_path: &Path, args: I) -> Result<String, String>
 where
     I: IntoIterator<Item = S>,
     S: AsRef<OsStr>,
 {
-    let output = Command::new("git")
+    let output = git_command()
         .env("LC_ALL", "C")
         .arg("-C")
         .arg(repo_path)
@@ -30,7 +47,7 @@ where
     I: IntoIterator<Item = S>,
     S: AsRef<OsStr>,
 {
-    let status = Command::new("git")
+    let status = git_command()
         .env("LC_ALL", "C")
         .arg("-C")
         .arg(repo_path)
