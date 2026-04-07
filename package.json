@@ -1,7 +1,7 @@
 {
 	"name": "checkmate",
 	"private": true,
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Cross-platform desktop app for reusable checklists and recorded runs",
 	"license": "MIT",
 	"repository": {
