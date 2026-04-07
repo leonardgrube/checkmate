@@ -119,8 +119,10 @@ fn maybe_commit_with_config_best_effort(
 }
 
 #[tauri::command]
-pub fn check_is_git_repo(path: String) -> Result<bool, String> {
-    Ok(is_git_repo(Path::new(&path)))
+pub async fn check_is_git_repo(path: String) -> Result<bool, String> {
+    tauri::async_runtime::spawn_blocking(move || Ok(is_git_repo(Path::new(&path))))
+        .await
+        .map_err(|e| e.to_string())?
 }
 
 #[cfg(test)]
