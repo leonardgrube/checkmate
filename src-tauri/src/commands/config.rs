@@ -67,11 +67,13 @@ pub fn update_config(
 #[tauri::command]
 pub fn get_default_data_path(app: tauri::AppHandle) -> Result<String, String> {
     let path = default_data_repo_path(&app)?;
-    path.canonicalize()
+    let s = path
+        .canonicalize()
         .unwrap_or(path)
         .to_str()
         .map(|s| s.to_string())
-        .ok_or_else(|| "Path contains invalid UTF-8".to_string())
+        .ok_or_else(|| "Path contains invalid UTF-8".to_string())?;
+    Ok(s.strip_prefix(r"\\?\").unwrap_or(&s).to_string())
 }
 
 #[tauri::command]
