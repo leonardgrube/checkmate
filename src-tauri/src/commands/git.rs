@@ -11,10 +11,14 @@ use std::os::windows::process::CommandExt;
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 fn git_command() -> Command {
-    let mut cmd = Command::new("git");
     #[cfg(target_os = "windows")]
-    cmd.creation_flags(CREATE_NO_WINDOW);
-    cmd
+    {
+        let mut cmd = Command::new("git");
+        cmd.creation_flags(CREATE_NO_WINDOW);
+        cmd
+    }
+    #[cfg(not(target_os = "windows"))]
+    Command::new("git")
 }
 
 fn run_git<I, S>(repo_path: &Path, args: I) -> Result<String, String>
