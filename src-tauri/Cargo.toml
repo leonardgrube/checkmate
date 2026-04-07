@@ -1,6 +1,6 @@
 [package]
 name = "checkmate"
-version = "1.0.2"
+version = "1.0.3"
 description = "Cross-platform desktop app for reusable checklists and recorded runs"
 authors = ["Leonard Grube"]
 license = "MIT"
